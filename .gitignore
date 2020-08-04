@@ -1,2 +1,5 @@
 .idea/
 target/
+client.iml
+magazine.iml
+transaction.iml
