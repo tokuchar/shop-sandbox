@@ -8,7 +8,7 @@ import lombok.Setter;
 public class Company {
     private String login;
     private String companyName;
-    private String nip;
+    private String taxNumber;
     private Address address;
     private Contact contact;
 }
