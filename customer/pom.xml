@@ -11,6 +11,8 @@
 
     <properties>
         <lombok.version>1.18.12</lombok.version>
+        <swagger.version>2.9.2</swagger.version>
+        <spring-plugin.version>1.2.0.RELEASE</spring-plugin.version>
         <springboot.maven.version>1.2.5.RELEASE</springboot.maven.version>
     </properties>
 
@@ -34,17 +36,17 @@
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
-            <version>2.9.2</version>
+            <version>${swagger.version}</version>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.9.2</version>
+            <version>${swagger.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.plugin</groupId>
             <artifactId>spring-plugin-core</artifactId>
-            <version>1.2.0.RELEASE</version>
+            <version>${spring-plugin.version}</version>
         </dependency>
 
     </dependencies>
