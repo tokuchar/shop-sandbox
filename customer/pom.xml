@@ -14,6 +14,7 @@
         <swagger.version>2.9.2</swagger.version>
         <spring-plugin.version>1.2.0.RELEASE</spring-plugin.version>
         <springboot.maven.version>1.2.5.RELEASE</springboot.maven.version>
+        <flyway.version>5.2.1</flyway.version>
     </properties>
 
     <artifactId>customer</artifactId>
@@ -48,7 +49,19 @@
             <artifactId>spring-plugin-core</artifactId>
             <version>${spring-plugin.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

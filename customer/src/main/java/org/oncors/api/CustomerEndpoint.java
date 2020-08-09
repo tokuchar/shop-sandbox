@@ -1,7 +1,6 @@
 package org.oncors.api;
 
 import lombok.extern.slf4j.Slf4j;
-import org.oncors.model.Company;
 import org.oncors.model.Customer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
