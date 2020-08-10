@@ -44,7 +44,7 @@ public class CompanyEndpoint {
         throw new NotImplementedException();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<Company> deleteCompany(@PathVariable long id) {
         return companyService.deleteById(id);

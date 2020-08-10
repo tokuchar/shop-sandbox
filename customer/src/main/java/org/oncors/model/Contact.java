@@ -3,7 +3,7 @@ package org.oncors.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Email;
 
@@ -11,9 +11,16 @@ import javax.validation.constraints.Email;
 @Getter
 @Setter
 public class Contact {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
+    private Long id;
     @Email(message = "email is not valid")
+    @Column
     private String email;
 
     @Digits(integer = 9, fraction = 0)
+    @Column
     private int phoneNumber;
+
 }

@@ -43,7 +43,7 @@ public class CustomerEndpoint {
         throw new NotImplementedException();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<Customer> deleteCustomer(@PathVariable Long id) {
         return customerService.deleteById(id);
     }
