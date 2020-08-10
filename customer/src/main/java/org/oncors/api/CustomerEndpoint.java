@@ -2,12 +2,16 @@ package org.oncors.api;
 
 import lombok.extern.slf4j.Slf4j;
 import org.oncors.model.Customer;
+import org.oncors.service.CustomerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -16,33 +20,31 @@ import java.util.List;
 @RequestMapping("/customers")
 public class CustomerEndpoint {
 
+    @Autowired
+    CustomerService customerService;
+
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<Customer>> getCustomers() {
-        throw new NotImplementedException();
+        return customerService.findAll();
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Customer> getCustomer(@PathVariable long id) {
-        throw new NotImplementedException();
+    public ResponseEntity<Customer> getCustomer(@PathVariable Long id) {
+        return customerService.findById(id);
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Customer> postCustomer(@RequestBody Customer Customer) {
-        throw new NotImplementedException();
+    public ResponseEntity<Customer> postCustomer(@Valid @RequestBody Customer customer) {
+        return customerService.create(customer);
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<Customer> putCustomer(@PathVariable long id, @RequestBody Customer customer) {
+    public ResponseEntity<Customer> putCustomer(@PathVariable Long id, @Valid @RequestBody Customer customer) {
         throw new NotImplementedException();
     }
 
     @DeleteMapping
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void deleteCustomer(@PathVariable long id) {
-        throw new NotImplementedException();
+    public ResponseEntity<Customer> deleteCustomer(@PathVariable Long id) {
+        return customerService.deleteById(id);
     }
 }
