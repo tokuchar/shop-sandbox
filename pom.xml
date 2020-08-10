@@ -20,6 +20,8 @@
         <module>magazine</module>
         <module>transaction</module>
         <module>shop-service-discovery</module>
+        <module>shop-api-gateway</module>
+        <module>shop-auth-service</module>
     </modules>
 
     <properties>
