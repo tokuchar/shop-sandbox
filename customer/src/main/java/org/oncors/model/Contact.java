@@ -13,14 +13,11 @@ import javax.validation.constraints.Email;
 public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
     private Long id;
     @Email(message = "email is not valid")
-    @Column
     private String email;
 
     @Digits(integer = 9, fraction = 0)
-    @Column
     private int phoneNumber;
 
 }

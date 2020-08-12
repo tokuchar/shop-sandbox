@@ -1,9 +1,7 @@
 package org.oncors.api;
 
 import lombok.extern.slf4j.Slf4j;
-import org.oncors.exception.CompanyNotFoundException;
 import org.oncors.model.Company;
-import org.oncors.repository.CompanyRepository;
 import org.oncors.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,12 +23,12 @@ public class CompanyEndpoint {
 
     @GetMapping
     public ResponseEntity<List<Company>> getCompanies() {
-       return companyService.findAll();
+        return companyService.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Company> getCompany(@PathVariable Long id) {
-       return companyService.findById(id);
+        return companyService.findById(id);
     }
 
     @PostMapping
