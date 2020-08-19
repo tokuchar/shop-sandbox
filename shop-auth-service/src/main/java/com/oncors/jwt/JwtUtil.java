@@ -1,8 +1,10 @@
 package com.oncors.jwt;
 
+import com.oncors.dto.JwtToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.security.core.token.Token;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -36,17 +38,21 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userDetails.getUsername());
+    public Token generateToken(UserDetails userDetails) {
+        Date tokenCreationDate = new Date(System.currentTimeMillis());
+        String tokenString = createToken(new HashMap<>(), userDetails.getUsername(), tokenCreationDate);
+
+        return JwtToken.builder()
+                .key(tokenString)
+                .keyCreationTime(tokenCreationDate.getTime()).build();
     }
 
     // how to create token?, SECRET_KEY must be a liitle more complicated
-    private String createToken(Map<String, Object> claims, String username) {
+    public String createToken(Map<String, Object> claims, String username, Date tokenCreationDate) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(username)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setIssuedAt(tokenCreationDate)
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
