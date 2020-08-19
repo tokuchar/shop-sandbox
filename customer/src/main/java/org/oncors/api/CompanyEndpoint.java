@@ -18,7 +18,6 @@ import java.util.List;
 @EnableSwagger2
 @RequestMapping("/companies")
 public class CompanyEndpoint {
-    @Autowired
     private CompanyService companyService;
 
     @GetMapping
@@ -48,4 +47,8 @@ public class CompanyEndpoint {
         return companyService.deleteById(id);
     }
 
+    @Autowired
+    public CompanyEndpoint(CompanyService companyService) {
+        this.companyService = companyService;
+    }
 }

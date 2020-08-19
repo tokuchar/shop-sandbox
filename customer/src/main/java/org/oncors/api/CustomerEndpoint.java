@@ -18,7 +18,6 @@ import java.util.List;
 @RequestMapping("/customers")
 public class CustomerEndpoint {
 
-    @Autowired
     CustomerService customerService;
 
     @GetMapping
@@ -44,5 +43,10 @@ public class CustomerEndpoint {
     @DeleteMapping("/{id}")
     public ResponseEntity<Customer> deleteCustomer(@PathVariable Long id) {
         return customerService.deleteById(id);
+    }
+
+    @Autowired
+    public CustomerEndpoint(CustomerService customerService) {
+        this.customerService = customerService;
     }
 }

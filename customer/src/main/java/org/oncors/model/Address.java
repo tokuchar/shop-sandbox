@@ -1,17 +1,20 @@
 package org.oncors.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.ArrayList;
-import java.util.Collection;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,12 +32,5 @@ public class Address {
     @NotNull(message = "house number cannot by null")
     private String houseNumber;
 
-//    @OneToMany(cascade = CascadeType.ALL)
-//    @JoinTable(name = "customer_address_mapping", joinColumns = @JoinColumn(name = "address_id"), inverseJoinColumns = @JoinColumn(name = "customer_id"))
-//    private Collection<Customer> customer = new ArrayList<>();
-//
-//
-//    @OneToMany(cascade = CascadeType.ALL)
-//    @JoinTable(name = "company_address_mapping", joinColumns = @JoinColumn(name = "address_id"), inverseJoinColumns = @JoinColumn(name = "company_id"))
-//    private Collection<Company> company = new ArrayList<>();
+
 }

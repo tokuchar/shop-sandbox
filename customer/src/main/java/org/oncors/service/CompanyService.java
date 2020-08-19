@@ -13,7 +13,6 @@ import java.util.List;
 
 @Service
 public class CompanyService {
-    @Autowired
     private CompanyRepository companyRepository;
 
     public ResponseEntity<List<Company>> findAll() {
@@ -53,5 +52,10 @@ public class CompanyService {
                 companyRepository.save(company),
                 HttpStatus.CREATED
         );
+    }
+
+    @Autowired
+    public CompanyService(CompanyRepository companyRepository) {
+        this.companyRepository = companyRepository;
     }
 }
