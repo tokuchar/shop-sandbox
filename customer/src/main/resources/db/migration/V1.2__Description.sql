@@ -1,3 +1,5 @@
+-- MySQL Workbench Forward Engineering
+
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
@@ -13,14 +15,14 @@ CREATE SCHEMA IF NOT EXISTS `CLIENT_DB` DEFAULT CHARACTER SET utf8 ;
 USE `CLIENT_DB` ;
 
 -- -----------------------------------------------------
--- Table `CLIENT_DB`.`address`
+-- Table `CLIENT_DB`.`company`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CLIENT_DB`.`address` (
-  `address_id` INT NOT NULL,
-  `city` VARCHAR(45) NOT NULL,
-  `country` VARCHAR(45) NULL,
-  `district` VARCHAR(45) NULL,
-  PRIMARY KEY (`address_id`))
+CREATE TABLE IF NOT EXISTS `CLIENT_DB`.`company` (
+  `company_id` INT NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`company_id`),
+  UNIQUE INDEX `company_id_UNIQUE` (`company_id` ASC) VISIBLE,
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 
@@ -37,28 +39,14 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `CLIENT_DB`.`company`
+-- Table `CLIENT_DB`.`address`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `CLIENT_DB`.`company` (
-  `company_id` INT NOT NULL,
-  `name` VARCHAR(45) NOT NULL,
-  `contact_id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `CLIENT_DB`.`address` (
   `address_id` INT NOT NULL,
-  PRIMARY KEY (`company_id`),
-  UNIQUE INDEX `company_id_UNIQUE` (`company_id` ASC) VISIBLE,
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE,
-  INDEX `contact_id_idx` (`contact_id` ASC) VISIBLE,
-  INDEX `address_id_idx` (`address_id` ASC) VISIBLE,
-  CONSTRAINT `address_id`
-    FOREIGN KEY (`address_id`)
-    REFERENCES `CLIENT_DB`.`address` (`address_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `contact_id`
-    FOREIGN KEY (`contact_id`)
-    REFERENCES `CLIENT_DB`.`contact` (`contact_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  `city` VARCHAR(45) NOT NULL,
+  `country` VARCHAR(45) NULL,
+  `district` VARCHAR(45) NULL,
+  PRIMARY KEY (`address_id`))
 ENGINE = InnoDB;
 
 
@@ -67,13 +55,11 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `CLIENT_DB`.`user` (
   `user_id` INT NOT NULL,
-  `login` VARCHAR(45) NOT NULL,
   `company_id` INT NULL,
   `address_id` INT NOT NULL,
   `contact_id` INT NOT NULL,
   UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC) VISIBLE,
   PRIMARY KEY (`user_id`),
-  UNIQUE INDEX `login_UNIQUE` (`login` ASC) VISIBLE,
   INDEX `company_id_idx` (`company_id` ASC) VISIBLE,
   INDEX `contact_id_idx` (`contact_id` ASC) VISIBLE,
   INDEX `address_id_idx` (`address_id` ASC) VISIBLE,
