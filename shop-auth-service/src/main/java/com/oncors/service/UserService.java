@@ -19,7 +19,7 @@ public class UserService implements UserDetailsService {
             new AbstractMap.SimpleEntry<>("JanKowalski", User.builder()
                     .username("JanKowalski")
                     .password("1234")
-                    .authorities(Stream.of(Authorities.USER).collect(Collectors.toSet()))
+                    .authorities(Stream.of(Authorities.USER, Authorities.ADMIN).collect(Collectors.toSet()))
                     .isAccountNonExpired(true)
                     .isAccountNonLocked(true)
                     .isCredentialsNonExpired(true)

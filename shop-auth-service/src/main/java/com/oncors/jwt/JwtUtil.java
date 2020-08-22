@@ -12,10 +12,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtUtil {
-    private String SECRET_KEY = "secret";
+    private String SECRET_KEY = "secret1234";
+    private final String AUTHORITIES_KEY = "AUTHORITIES";
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -40,7 +42,10 @@ public class JwtUtil {
 
     public Token generateToken(UserDetails userDetails) {
         Date tokenCreationDate = new Date(System.currentTimeMillis());
-        String tokenString = createToken(new HashMap<>(), userDetails.getUsername(), tokenCreationDate);
+        Map<String, Object> claims = //new HashMap<>();
+                createClaims(userDetails);
+
+        String tokenString = createToken(claims, userDetails.getUsername(), tokenCreationDate);
 
         return JwtToken.builder()
                 .key(tokenString)
@@ -48,13 +53,24 @@ public class JwtUtil {
     }
 
     // how to create token?, SECRET_KEY must be a liitle more complicated
-    public String createToken(Map<String, Object> claims, String username, Date tokenCreationDate) {
+    private String createToken(Map<String, Object> claims, String username, Date tokenCreationDate) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(tokenCreationDate)
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+    }
+
+    private Map<String, Object> createClaims(UserDetails userDetails) {
+        String authorities = userDetails.getAuthorities().stream()
+                .map(a -> a.getAuthority())
+                .collect(Collectors.joining(","));
+        return new HashMap<String, Object>() {
+            {
+                put(AUTHORITIES_KEY, authorities);
+            }
+        };
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
