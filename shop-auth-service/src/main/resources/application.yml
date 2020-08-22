@@ -18,3 +18,7 @@ eureka:
   instance:
     preferIpAddress: true
     instance-id: ${spring.application.name}:${random.int}
+
+token:
+  expirationTime: 36000000
+  secretKey: secret1234

@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import kong.unirest.Unirest;
 import org.oncors.model.Authorities;
 import org.oncors.model.User;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +16,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class JwtUtil {
-    private String SECRET_KEY = "secret1234";
     private final String AUTHORITIES_KEY = "AUTHORITIES";
+    @Value("${auth.service.url}")
+    private String authServiceUrl;
+    @Value("${auth.secretKey}")
+    private String secretKey;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -29,7 +33,7 @@ public class JwtUtil {
                 .collect(Collectors.toSet());
     }
 
-    public UserDetails extractUserDetails(String token){
+    public UserDetails extractUserDetails(String token) {
         return User.builder()
                 .username(extractUsername(token))
                 .authorities(extractAuthorities(token))
@@ -42,7 +46,7 @@ public class JwtUtil {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
     }
 
     public Boolean validateToken(String token) {
@@ -50,7 +54,7 @@ public class JwtUtil {
     }
 
     public Boolean callAuthServer(String token) {
-        return Boolean.parseBoolean(Unirest.post("http://localhost:8082/validate_token")
+        return Boolean.parseBoolean(Unirest.post(authServiceUrl + "/validate_token")
                 .queryString(JwtUtilConstants.JWT_TOKEN_QUERY_PARAM, token)
                 .asString().getBody());
     }

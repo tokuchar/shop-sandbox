@@ -17,3 +17,7 @@ eureka:
   instance:
     preferIpAddress: true
     instance-id: ${spring.application.name}:${random.int}
+auth:
+  secretKey: secret1234
+  service:
+    url: localhost:9092/api-gateway/auth-service

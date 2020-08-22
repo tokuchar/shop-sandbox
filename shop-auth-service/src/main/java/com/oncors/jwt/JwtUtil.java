@@ -4,6 +4,7 @@ import com.oncors.dto.JwtToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.token.Token;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class JwtUtil {
-    private String SECRET_KEY = "secret1234";
+    @Value("${token.secretKey}")
+    private String secretKey;
+    @Value("${token.expirationTime}'")
+    private String expirationTime;
     private final String AUTHORITIES_KEY = "AUTHORITIES";
 
     public String extractUsername(String token) {
@@ -33,7 +37,7 @@ public class JwtUtil {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
     }
 
     private Boolean isTokenExpired(String token) {
@@ -52,14 +56,13 @@ public class JwtUtil {
                 .keyCreationTime(tokenCreationDate.getTime()).build();
     }
 
-    // how to create token?, SECRET_KEY must be a liitle more complicated
     private String createToken(Map<String, Object> claims, String username, Date tokenCreationDate) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(tokenCreationDate)
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(expirationTime)))
+                .signWith(SignatureAlgorithm.HS256, secretKey).compact();
     }
 
     private Map<String, Object> createClaims(UserDetails userDetails) {
