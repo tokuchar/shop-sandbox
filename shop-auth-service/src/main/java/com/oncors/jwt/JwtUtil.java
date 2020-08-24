@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 public class JwtUtil {
     @Value("${token.secretKey}")
     private String secretKey;
-    @Value("${token.expirationTime}'")
-    private String expirationTime;
+    @Value("${token.expirationTime}")
+    private long expirationTime;
     private final String AUTHORITIES_KEY = "AUTHORITIES";
 
     public String extractUsername(String token) {
@@ -46,8 +46,7 @@ public class JwtUtil {
 
     public Token generateToken(UserDetails userDetails) {
         Date tokenCreationDate = new Date(System.currentTimeMillis());
-        Map<String, Object> claims = //new HashMap<>();
-                createClaims(userDetails);
+        Map<String, Object> claims = createClaims(userDetails);
 
         String tokenString = createToken(claims, userDetails.getUsername(), tokenCreationDate);
 
@@ -61,7 +60,7 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(tokenCreationDate)
-                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(expirationTime)))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(SignatureAlgorithm.HS256, secretKey).compact();
     }
 

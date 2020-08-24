@@ -9,9 +9,6 @@ import org.springframework.security.core.token.Token;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Service
 public class TokenServiceImpl implements TokenService {
     @Autowired

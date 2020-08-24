@@ -18,7 +18,7 @@ public class UserService implements UserDetailsService {
     private static Map<String, UserDetails> userRepository = Stream.of(
             new AbstractMap.SimpleEntry<>("JanKowalski", User.builder()
                     .username("JanKowalski")
-                    .password("1234")
+                    .password("$2a$04$lSTpwQEoKkDbcrYk29uLS.BgnE/yydfzDOsAwsMN0inxtqINPN1mq")
                     .authorities(Stream.of(Authorities.USER, Authorities.ADMIN).collect(Collectors.toSet()))
                     .isAccountNonExpired(true)
                     .isAccountNonLocked(true)
