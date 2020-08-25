@@ -20,4 +20,4 @@ eureka:
 auth:
   secretKey: secret1234
   service:
-    url: localhost:9092/api-gateway/auth-service
+    url: http://localhost:9092/api-gateway/auth-service
