@@ -2,8 +2,8 @@ package org.oncors.service;
 
 import org.oncors.exception.CustomerNotFoundException;
 import org.oncors.exception.DataNotFoundException;
-import org.oncors.model.Customer;
-import org.oncors.repository.CustomerRepository;
+import org.oncors.model.User;
+import org.oncors.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CustomerService {
-    private CustomerRepository customerRepository;
+public class UserService {
+    private UserRepository userRepository;
 
-    public ResponseEntity<List<Customer>> findAll() {
-        List<Customer> companies = customerRepository.findAll();
+    public ResponseEntity<List<User>> findAll() {
+        List<User> companies = userRepository.findAll();
         if (companies.isEmpty())
             throw new DataNotFoundException();
         return new ResponseEntity<>(
@@ -25,33 +25,33 @@ public class CustomerService {
         );
     }
 
-    public ResponseEntity<Customer> findById(Long id) {
+    public ResponseEntity<User> findById(Long id) {
         return new ResponseEntity<>(
-                customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException(id)),
+                userRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException(id)),
                 HttpStatus.OK
         );
     }
 
-    public ResponseEntity<Customer> deleteById(Long id) {
-        customerRepository.deleteById(id);
+    public ResponseEntity<User> deleteById(Long id) {
+        userRepository.deleteById(id);
         return new ResponseEntity<>(
                 HttpStatus.OK
         );
     }
 
-    public ResponseEntity<Customer> update(Long id, Customer Customer) {
+    public ResponseEntity<User> update(Long id, User user) {
         return null;
     }
 
-    public ResponseEntity<Customer> create(Customer Customer) {
+    public ResponseEntity<User> create(User user) {
         return new ResponseEntity<>(
-                customerRepository.save(Customer),
+                userRepository.save(user),
                 HttpStatus.CREATED
         );
     }
 
     @Autowired
-    public CustomerService(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 }

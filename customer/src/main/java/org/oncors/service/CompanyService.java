@@ -42,8 +42,6 @@ public class CompanyService {
     public ResponseEntity<Company> update(Long id, Company company) {
         Company updateCompany = companyRepository.getOne(id);
         updateCompany.setCompanyName(company.getCompanyName());
-        updateCompany.setAddress(company.getAddress());
-        updateCompany.setContact(company.getContact());
         return null;
     }
 

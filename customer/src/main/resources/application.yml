@@ -3,12 +3,10 @@ spring:
     name: customer
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/CLIENT_DB
-    username: dbuser
-#=======
+    username: root
 #    url: jdbc:mysql://localhost:3306/CLIENT_DB
 ##    url: jdbc:mysql://host.docker.internal:3306/CLIENT_DB
 #    username: root
-#>>>>>>> master
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
 eureka:
