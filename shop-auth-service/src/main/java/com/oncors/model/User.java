@@ -13,7 +13,7 @@ import java.util.Set;
 public class User implements UserDetails {
     private String username;
     private String password;
-    private Set<Authorities> authorities;
+    private Set<Authority> authorities;
 
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;

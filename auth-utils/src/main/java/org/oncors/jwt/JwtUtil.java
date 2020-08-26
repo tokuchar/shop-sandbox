@@ -3,7 +3,7 @@ package org.oncors.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import kong.unirest.Unirest;
-import org.oncors.model.Authorities;
+import org.oncors.model.Authority;
 import org.oncors.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,10 +26,10 @@ public class JwtUtil {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public Set<Authorities> extractAuthorities(String token) {
+    public Set<Authority> extractAuthorities(String token) {
         Claims claims = extractAllClaims(token);
         return Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                .map(authority -> Authorities.valueOf(authority))
+                .map(authority -> Authority.valueOf(authority))
                 .collect(Collectors.toSet());
     }
 

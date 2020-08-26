@@ -1,7 +1,7 @@
 package org.oncors.config;
 
 import org.oncors.jwt.JwtReqFilter;
-import org.oncors.model.Authorities;
+import org.oncors.model.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/customers").hasAuthority(Authorities.USER.name())
+                .antMatchers("/customers").hasAuthority(Authority.USER.name())
                 .anyRequest().authenticated()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

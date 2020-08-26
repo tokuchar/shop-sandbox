@@ -1,6 +1,6 @@
 package com.oncors.jwt;
 
-import com.oncors.service.UserService;
+import com.oncors.service.UserQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,7 +18,7 @@ import java.io.IOException;
 @Component
 public class JwtReqFilter extends OncePerRequestFilter {
     @Autowired
-    private UserService userService;
+    private UserQueryService userQueryService;
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -34,7 +34,7 @@ public class JwtReqFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userService.loadUserByUsername(username);
+            UserDetails userDetails = userQueryService.loadUserByUsername(username);
 
             if (jwtUtil.validateToken(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authenticationToken =

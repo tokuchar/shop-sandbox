@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TokenServiceImpl implements TokenService {
     @Autowired
-    private UserService userService;
+    private UserQueryService userQueryService;
     @Autowired
     private JwtUtil jwtUtil;
     @Autowired
@@ -20,7 +20,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public Boolean validateToken(String jwtToken) {
-        UserDetails userDetails = userService.loadUserByUsername(jwtUtil.extractUsername(jwtToken));
+        UserDetails userDetails = userQueryService.loadUserByUsername(jwtUtil.extractUsername(jwtToken));
         return jwtUtil.validateToken(jwtToken, userDetails);
     }
 
@@ -30,7 +30,7 @@ public class TokenServiceImpl implements TokenService {
                 new UsernamePasswordAuthenticationToken(username, password)
         );
 
-        final UserDetails userDetails = userService.loadUserByUsername(username);
+        final UserDetails userDetails = userQueryService.loadUserByUsername(username);
         return jwtUtil.generateToken(userDetails);
     }
 }

@@ -1,6 +1,7 @@
 package com.oncors.api;
 
 import com.oncors.dto.AuthRequest;
+import com.oncors.model.User;
 import com.oncors.service.TokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.server.ResponseStatusException;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 @Slf4j
+@EnableSwagger2
 @RestController
 public class AuthApi {
     @Autowired
@@ -44,6 +48,11 @@ public class AuthApi {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, exception.getMessage());
         }
         return ResponseEntity.ok(isTokenValid);
+    }
+
+    @PostMapping(value = "/create_account")
+    public ResponseEntity<Void> createAccount(@RequestBody User createAccount){
+        throw new NotImplementedException();
     }
 
     @GetMapping(value = "/hello")

@@ -1,6 +1,6 @@
 package com.oncors.service;
 
-import com.oncors.model.Authorities;
+import com.oncors.model.Authority;
 import com.oncors.model.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserQueryService implements UserDetailsService {
     //in future this will be our user repository (with database)
     private static Map<String, UserDetails> userRepository = Stream.of(
             new AbstractMap.SimpleEntry<>("JanKowalski", User.builder()
                     .username("JanKowalski")
                     .password("$2a$04$lSTpwQEoKkDbcrYk29uLS.BgnE/yydfzDOsAwsMN0inxtqINPN1mq")
-                    .authorities(Stream.of(Authorities.USER, Authorities.ADMIN).collect(Collectors.toSet()))
+                    .authorities(Stream.of(Authority.USER, Authority.ADMIN).collect(Collectors.toSet()))
                     .isAccountNonExpired(true)
                     .isAccountNonLocked(true)
                     .isCredentialsNonExpired(true)
