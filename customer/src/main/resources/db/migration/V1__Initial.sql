@@ -1,4 +1,0 @@
-CREATE TABLE TEST (
-  test_id INT NOT NULL,
-  PRIMARY KEY (test_id),
-  UNIQUE INDEX test_id_UNIQUE (test_id ASC) VISIBLE);
