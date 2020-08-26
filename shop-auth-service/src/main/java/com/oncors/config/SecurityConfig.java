@@ -25,13 +25,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtReqFilter jwtReqFilter;
 
+    private static final String[] AUTH_WHITELIST = {
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**"
+    };
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/authenticate").permitAll()
                 .antMatchers("/validate_token").permitAll()
-                .antMatchers("/hello").hasAuthority(Authority.USER.name())
-                .antMatchers("/helloAdmin").hasAuthority(Authority.ADMIN.name())
+                .antMatchers(AUTH_WHITELIST).permitAll()
+                //TODO: allow create account only for integration microservice :)
+                .antMatchers("/create_account").hasAuthority(Authority.ADMIN.name())
                 .anyRequest().authenticated()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

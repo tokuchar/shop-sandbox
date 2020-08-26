@@ -50,18 +50,4 @@ public class AuthApi {
         return ResponseEntity.ok(isTokenValid);
     }
 
-    @PostMapping(value = "/create_account")
-    public ResponseEntity<Void> createAccount(@RequestBody User createAccount){
-        throw new NotImplementedException();
-    }
-
-    @GetMapping(value = "/hello")
-    public String helloWorld() {
-        return "hello world!";
-    }
-
-    @GetMapping(value = "/helloAdmin")
-    public String helloAdmin() {
-        return "hello admin!";
-    }
 }
