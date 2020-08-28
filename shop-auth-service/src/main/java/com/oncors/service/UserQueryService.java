@@ -1,6 +1,7 @@
 package com.oncors.service;
 
 import com.oncors.model.Authority;
+import com.oncors.model.ShopAuthority;
 import com.oncors.model.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +20,7 @@ public class UserQueryService implements UserDetailsService {
             new AbstractMap.SimpleEntry<>("JanKowalski", User.builder()
                     .username("JanKowalski")
                     .password("$2a$04$lSTpwQEoKkDbcrYk29uLS.BgnE/yydfzDOsAwsMN0inxtqINPN1mq")
-                    .authorities(Stream.of(Authority.USER, Authority.ADMIN).collect(Collectors.toSet()))
+                    .authorities(Stream.of(Authority.builder().authority(ShopAuthority.USER).build()).collect(Collectors.toSet()))
                     .isAccountNonExpired(true)
                     .isAccountNonLocked(true)
                     .isCredentialsNonExpired(true)
