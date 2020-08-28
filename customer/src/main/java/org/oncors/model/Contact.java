@@ -13,7 +13,6 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -12,7 +12,6 @@ import javax.validation.constraints.Pattern;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

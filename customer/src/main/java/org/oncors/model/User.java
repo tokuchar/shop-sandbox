@@ -1,7 +1,6 @@
 package org.oncors.model;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,10 +9,9 @@ import javax.validation.Valid;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
     @Valid
@@ -32,6 +30,6 @@ public class User {
     private PersonalData personalData;
 
     @ManyToOne
-    @JoinColumn(name="company_id", nullable=false)
+    @JoinColumn(name = "company_id")
     private Company company;
 }

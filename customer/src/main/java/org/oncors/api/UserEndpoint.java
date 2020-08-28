@@ -18,10 +18,10 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserEndpoint {
 
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<User>> getusers() {
+    public ResponseEntity<List<User>> getUsers() {
         return userService.findAll();
     }
 
@@ -36,7 +36,12 @@ public class UserEndpoint {
     }
 
     @PutMapping
-    public ResponseEntity<User> putUser(@PathVariable Long id, @Valid @RequestBody User user) {
+    public ResponseEntity<User> alterUser(@PathVariable Long id, @Valid @RequestBody User user) {
+        throw new NotImplementedException();
+    }
+
+    @PatchMapping
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @Valid @RequestBody User user) {
         throw new NotImplementedException();
     }
 

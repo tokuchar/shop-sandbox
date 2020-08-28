@@ -5,8 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
@@ -17,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class Company {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long companyId;
 
     @NotNull(message = "company name cannot be null")
@@ -25,6 +23,6 @@ public class Company {
     @Column(name = "name")
     private String companyName;
 
-    @OneToMany(mappedBy="company")
+    @OneToMany(mappedBy = "company")
     private Set<User> users;
 }

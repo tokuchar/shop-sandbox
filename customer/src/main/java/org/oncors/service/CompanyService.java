@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 public class CompanyService {
-    private CompanyRepository companyRepository;
+    private final CompanyRepository companyRepository;
 
     public ResponseEntity<List<Company>> findAll() {
         List<Company> companies = companyRepository.findAll();

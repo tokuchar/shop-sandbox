@@ -15,7 +15,6 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 public class PersonalData {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

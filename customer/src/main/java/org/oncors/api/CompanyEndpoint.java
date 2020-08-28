@@ -1,7 +1,9 @@
 package org.oncors.api;
 
 import lombok.extern.slf4j.Slf4j;
+import org.oncors.exception.DataNotFoundException;
 import org.oncors.model.Company;
+import org.oncors.repository.CompanyRepository;
 import org.oncors.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,43 +14,57 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
 @EnableSwagger2
 @RequestMapping("/companies")
 public class CompanyEndpoint {
-    private CompanyService companyService;
+    private final CompanyRepository companyRepository;
 
     @GetMapping
     public ResponseEntity<List<Company>> getCompanies() {
-        return companyService.findAll();
+        List<Company> companies = companyRepository.findAll();
+        if (companies.isEmpty())
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(companies);
+
+        return ResponseEntity.status(HttpStatus.FOUND).body(companies);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Company> getCompany(@PathVariable Long id) {
-        return companyService.findById(id);
+        Optional<Company> company = companyRepository.findById(id);
+        return company.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(company.get()));
+
     }
 
     @PostMapping
     public ResponseEntity<Company> postCompany(@Valid @RequestBody Company company) {
-        return companyService.create(company);
+        return ResponseEntity.status(HttpStatus.OK).body(companyRepository.save(company));
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<Company> putCompany(@PathVariable Long id, @Valid @RequestBody Company company) {
+    public ResponseEntity<Company> alterCompany(@PathVariable Long id, @Valid @RequestBody Company newCompany) {
+        Optional<Company> company = companyRepository.findById(id);
+        return companyRepository.findById(id).map(company1 -> {
+            company1=newCompany;
+            return ResponseEntity.status(HttpStatus.ACCEPTED);
+        };
+    }
+
+    @PatchMapping
+    public ResponseEntity<Company> updateCompany(@PathVariable long id, @RequestBody Company company) {
         throw new NotImplementedException();
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<Company> deleteCompany(@PathVariable long id) {
-        return companyService.deleteById(id);
+        return companyRepository.deleteById(id);
     }
 
     @Autowired
-    public CompanyEndpoint(CompanyService companyService) {
-        this.companyService = companyService;
+    public CompanyEndpoint(CompanyRepository companyRepository) {
+        this.companyRepository = companyRepository;
     }
 }
