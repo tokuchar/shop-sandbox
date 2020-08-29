@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 public class UserCommandService implements UserCommand {
@@ -17,8 +18,13 @@ public class UserCommandService implements UserCommand {
 
     @Transactional
     @Override
-    public void createUser(User user) {
+    public void createUser(User user) throws UserAlreadyExistsException {
+        Optional.ofNullable(userRepository.findByUsername(user.getUsername()))
+                .filter(u -> !user.getUsername().equals(u.getUsername()))
+                .orElseThrow(() -> new UserAlreadyExistsException(String.format("user %s already exists", user.getUsername())));
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
+
 }
