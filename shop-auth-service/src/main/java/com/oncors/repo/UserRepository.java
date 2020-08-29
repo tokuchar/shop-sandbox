@@ -13,6 +13,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User save(User user);
 
     @Query("select u from User u where u.username = ?1")
-    User findByUsername(String username);
+    User findUserByUsername(String username);
 
 }
