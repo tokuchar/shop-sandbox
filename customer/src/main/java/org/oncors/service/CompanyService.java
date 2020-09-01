@@ -25,12 +25,12 @@ public class CompanyService {
         );
     }
 
-    public ResponseEntity<Company> findById(Long id) {
-        return new ResponseEntity<>(
-                companyRepository.findById(id).orElseThrow(() -> new CompanyNotFoundException(id)),
-                HttpStatus.OK
-        );
-    }
+//    public ResponseEntity<Company> findById(Long id) {
+//        return new ResponseEntity<>(
+//                companyRepository.findById(id).orElseThrow(() -> new CompanyNotFoundException(id)),
+//                HttpStatus.OK
+//        );
+//    }
 
     public ResponseEntity<Company> deleteById(Long id) {
         companyRepository.deleteById(id);

@@ -1,6 +1,12 @@
 package org.oncors.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import lombok.extern.slf4j.Slf4j;
+import org.oncors.exception.CompanyNotFoundException;
 import org.oncors.exception.DataNotFoundException;
 import org.oncors.model.Company;
 import org.oncors.repository.CompanyRepository;
@@ -22,6 +28,7 @@ import java.util.Optional;
 @RequestMapping("/companies")
 public class CompanyEndpoint {
     private final CompanyRepository companyRepository;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @GetMapping
     public ResponseEntity<List<Company>> getCompanies() {
@@ -44,27 +51,38 @@ public class CompanyEndpoint {
         return ResponseEntity.status(HttpStatus.OK).body(companyRepository.save(company));
     }
 
-    @PutMapping
-    public ResponseEntity<Company> alterCompany(@PathVariable Long id, @Valid @RequestBody Company newCompany) {
-        Optional<Company> company = companyRepository.findById(id);
-        return companyRepository.findById(id).map(company1 -> {
-            company1=newCompany;
-            return ResponseEntity.status(HttpStatus.ACCEPTED);
-        };
+//    @PutMapping
+//    public ResponseEntity<Company> alterCompany(@PathVariable Long id, @Valid @RequestBody Company newCompany) {
+//        Company company = companyRepository.findById(id).get();
+//        company=newCompany;
+//
+//    }
+
+    @PatchMapping(path="/{id}", consumes = "application/json-patch+json")
+    public ResponseEntity<Company> updateCompany(@PathVariable long id, @RequestBody JsonPatch patch) {
+       try {
+           Company company = Optional.ofNullable(companyRepository.findById(id).orElseThrow(CompanyNotFoundException::new)).get();
+           company = applyPatchToCustomer(patch, company);
+           return ResponseEntity.ok(company);
+       } catch (JsonPatchException | JsonProcessingException e) {
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+       } catch (CompanyNotFoundException e){
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+       }
     }
 
-    @PatchMapping
-    public ResponseEntity<Company> updateCompany(@PathVariable long id, @RequestBody Company company) {
-        throw new NotImplementedException();
-    }
-
-    @DeleteMapping("/{id}")
+   /* @DeleteMapping("/{id}")
     public ResponseEntity<Company> deleteCompany(@PathVariable long id) {
         return companyRepository.deleteById(id);
-    }
+    }*/
 
     @Autowired
     public CompanyEndpoint(CompanyRepository companyRepository) {
         this.companyRepository = companyRepository;
+    }
+
+    private Company applyPatchToCustomer(JsonPatch patch, Company targetCustomer) throws JsonPatchException, JsonProcessingException {
+        JsonNode patched = patch.apply(objectMapper.convertValue(targetCustomer, JsonNode.class));
+        return objectMapper.treeToValue(patched, Company.class);
     }
 }
