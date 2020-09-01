@@ -1,7 +1,6 @@
 package com.oncors.config;
 
 import com.oncors.jwt.JwtReqFilter;
-import com.oncors.model.Authority;
 import com.oncors.model.ShopAuthority;
 import com.oncors.service.UserQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/authenticate").permitAll()
                 .antMatchers("/validate_token").permitAll()
                 .antMatchers(AUTH_WHITELIST).permitAll()
-                //TODO: allow create account only for integration microservice :)
-                .antMatchers("/user").permitAll()
-                .antMatchers("/create_account").hasAuthority(ShopAuthority.ADMIN.name())
+                .antMatchers("/user").hasAnyAuthority(ShopAuthority.ADMIN.name(), ShopAuthority.REGISTRATION_MICROSERVICE.name())
                 .anyRequest().authenticated()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

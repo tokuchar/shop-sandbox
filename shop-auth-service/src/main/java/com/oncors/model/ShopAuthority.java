@@ -1,6 +1,7 @@
 package com.oncors.model;
 
-public enum  ShopAuthority {
+public enum ShopAuthority {
     USER,
-    ADMIN
+    ADMIN,
+    REGISTRATION_MICROSERVICE
 }

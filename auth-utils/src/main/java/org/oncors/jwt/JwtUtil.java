@@ -29,6 +29,7 @@ public class JwtUtil {
     public Set<Authority> extractAuthorities(String token) {
         Claims claims = extractAllClaims(token);
         return Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+                .filter(a -> !"".equals(a))
                 .map(authority -> Authority.valueOf(authority))
                 .collect(Collectors.toSet());
     }

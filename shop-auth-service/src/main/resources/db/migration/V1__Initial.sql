@@ -12,22 +12,20 @@ CREATE TABLE IF NOT EXISTS `AUTH_DB`.`user` (
 ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `AUTH_DB`.`authority` (
-  `authority_id` BIGINT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(30) NOT NULL,
-  PRIMARY KEY (`authority_id`),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE,
-  UNIQUE INDEX `authority_id_UNIQUE` (`authority_id` ASC) VISIBLE)
+  PRIMARY KEY (`name`),
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE)
 ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `AUTH_DB`.`users_authorities` (
-  `authority_id` BIGINT NOT NULL,
+  `authority_name` VARCHAR(30) NOT NULL,
   `user_id` BIGINT NOT NULL,
-  PRIMARY KEY (`authority_id`, `user_id`),
+  PRIMARY KEY (`authority_name`, `user_id`),
   INDEX `fk_Authority_has_User_User1_idx` (`user_id` ASC) VISIBLE,
-  INDEX `fk_Authority_has_User_Authority_idx` (`authority_id` ASC) VISIBLE,
+  INDEX `fk_Authority_has_User_Authority_idx` (`authority_name` ASC) VISIBLE,
   CONSTRAINT `fk_Authority_has_User_Authority`
-    FOREIGN KEY (`authority_id`)
-    REFERENCES `AUTH_DB`.`authority` (`authority_id`)
+    FOREIGN KEY (`authority_name`)
+    REFERENCES `AUTH_DB`.`authority` (`name`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Authority_has_User_User1`

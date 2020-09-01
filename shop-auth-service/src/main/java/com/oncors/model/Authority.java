@@ -14,18 +14,13 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Authority implements GrantedAuthority {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long authorityId;
     @Enumerated(EnumType.STRING)
     @Column(name = "name", unique = true)
     ShopAuthority authority;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "users_authorities",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "authority_id"))
+    @ManyToMany(mappedBy = "authorities")
     private Set<User> users;
 
     @Override

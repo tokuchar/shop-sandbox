@@ -19,11 +19,11 @@ public class UserCommandService implements UserCommand {
     @Transactional
     @Override
     public void createUser(User user) throws UserAlreadyExistsException {
-        Optional.ofNullable(userRepository.findUserByUsername(user.getUsername()))
-                .filter(u -> !user.getUsername().equals(u.getUsername()))
-                .orElseThrow(() -> new UserAlreadyExistsException(String.format("user %s already exists", user.getUsername())));
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        if (Optional.ofNullable(userRepository.findUserByUsername(user.getUsername())).isPresent()) {
+            throw new UserAlreadyExistsException(String.format("user %s already exists", user.getUsername()));
+        } else {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userRepository.save(user);
+        }
     }
 }
