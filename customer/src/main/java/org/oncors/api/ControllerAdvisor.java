@@ -1,7 +1,7 @@
 package org.oncors.api;
 
 import org.oncors.exception.CompanyNotFoundException;
-import org.oncors.exception.CustomerNotFoundException;
+import org.oncors.exception.UserNotFoundException;
 import org.oncors.exception.DataNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -49,7 +49,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.NO_CONTENT);
     }
 
-    @ExceptionHandler(CustomerNotFoundException.class)
+    @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Object> handleCustomerNotFoundException(
             CompanyNotFoundException ex, WebRequest request) {
 
