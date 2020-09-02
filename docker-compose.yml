@@ -1,0 +1,28 @@
+version: "3"
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:1.17
+    ports:
+      - 16686:16686
+  customer-db:
+    container_name: customer-db
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=CLIENT_DB
+      - MYSQL_USER=dbuser
+      - MYSQL_PASSWORD=1234
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+  auth-db:
+    container_name: auth-db
+    image: mysql:latest
+    ports:
+      - 3307:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=AUTH_DB
+      - MYSQL_USER=dbuser
+      - MYSQL_PASSWORD=1234
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
