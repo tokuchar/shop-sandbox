@@ -15,6 +15,8 @@
         <spring-plugin.version>1.2.0.RELEASE</spring-plugin.version>
         <springboot.maven.version>1.2.5.RELEASE</springboot.maven.version>
         <flyway.version>5.2.1</flyway.version>
+        <jjwt.version>0.9.1</jjwt.version>
+        <auth.util.version>1.0-SNAPSHOT</auth.util.version>
     </properties>
 
     <artifactId>customer</artifactId>
@@ -73,6 +75,25 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.oncors</groupId>
+            <artifactId>auth-utils</artifactId>
+            <version>${auth.util.version}</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
