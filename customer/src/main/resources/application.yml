@@ -21,3 +21,8 @@ auth:
   secretKey: secret1234
   service:
     url: http://localhost:9092/api-gateway/auth-service
+opentracing:
+  jaeger:
+    enabled: true
+    http-sender:
+      url: http://${JAEGER_HOST}:14268/api/traces
