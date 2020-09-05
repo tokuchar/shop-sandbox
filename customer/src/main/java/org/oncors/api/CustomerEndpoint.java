@@ -4,21 +4,14 @@ import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
-import io.opentracing.propagation.TextMap;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.internal.http.HttpMethod;
-import org.apache.http.client.methods.RequestBuilder;
 import org.oncors.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -58,34 +51,15 @@ public class CustomerEndpoint {
     }
 
     private String makeRequest(HttpHeaders httpHeaders) {
-        URI uri = UriComponentsBuilder
-                .fromHttpUrl("http://localhost:8082/hello")
-                .build(Collections.emptyMap());
-//        ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
-
-        Request.Builder requestBuilder = new Request.Builder()
-                .url("http://localhost:8082/hello");
-
         tracer.inject(
                 tracer.activeSpan().context(),
                 Format.Builtin.HTTP_HEADERS,
-                new RequestBuilderCarrier(requestBuilder));
+                new RequestBuilderCarrier(httpHeaders));
 
-        OkHttpClient httpClient = new OkHttpClient();
-        try {
-            Response response = httpClient
-                    .newCall(requestBuilder.build())
-                    .execute();
+        final HttpEntity<String> entity = new HttpEntity<>(httpHeaders);
+        ResponseEntity<String> response = restTemplate.exchange("http://localhost:8082/hello", HttpMethod.GET, entity, String.class);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-//        tracer.inject(
-//                tracer.activeSpan().context(),
-//                Format.Builtin.HTTP_HEADERS,
-//                new RequestBuilderCarrier(httpHeaders));
+        log.info("test response: " + response.getBody());
 
         return "hey";
     }
@@ -115,10 +89,10 @@ public class CustomerEndpoint {
     }
 
     public class RequestBuilderCarrier implements io.opentracing.propagation.TextMap {
-        private final Request.Builder builder;
+        private final HttpHeaders httpHeaders;
 
-        RequestBuilderCarrier(Request.Builder builder) {
-            this.builder = builder;
+        RequestBuilderCarrier(HttpHeaders httpHeaders) {
+            this.httpHeaders = httpHeaders;
         }
 
         @Override
@@ -128,7 +102,7 @@ public class CustomerEndpoint {
 
         @Override
         public void put(String key, String value) {
-            builder.addHeader(key, value);
+            httpHeaders.add(key, value);
         }
     }
 }
