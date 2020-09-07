@@ -13,7 +13,6 @@
 
     <properties>
         <springboot.maven.version>1.2.5.RELEASE</springboot.maven.version>
-        <jeager.version>1.0.3</jeager.version>
     </properties>
 
     <dependencies>
@@ -32,11 +31,6 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.opentracing.contrib</groupId>
-            <artifactId>opentracing-spring-jaeger-web-starter</artifactId>
-            <version>${jeager.version}</version>
         </dependency>
     </dependencies>
 
