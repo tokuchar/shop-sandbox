@@ -1,4 +1,4 @@
-package org.oncors.model;
+package org.oncors.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +29,8 @@ public class User {
     @JoinColumn(name = "personal_data_id")
     private PersonalData personalData;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
+    //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Company company;
 }

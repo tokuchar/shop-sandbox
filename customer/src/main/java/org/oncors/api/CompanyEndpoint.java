@@ -6,8 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.Conditions;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.oncors.exception.CompanyNotFoundException;
-import org.oncors.model.Company;
+import org.oncors.model.DTO.CompanyDTO;
+import org.oncors.model.entity.Company;
 import org.oncors.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +20,10 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -25,31 +31,44 @@ import java.util.Optional;
 @RequestMapping("/companies")
 public class CompanyEndpoint {
     private final CompanyRepository companyRepository;
+    private final ModelMapper mapper = configureMapper();
 
     @GetMapping
-    public ResponseEntity<List<Company>> getCompanies() {
-        List<Company> companies = companyRepository.findAll();
-        if (companies.isEmpty())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(companies);
+    public ResponseEntity<List<CompanyDTO>> getCompanies() {
 
-        return ResponseEntity.status(HttpStatus.FOUND).body(companies);
+        List<Company> companies = companyRepository.findAll();
+        return ResponseEntity.ok().body( companies.stream().map(this::converterToDTO).collect(Collectors.toList()));
+
+//        if (companies.isEmpty())
+//            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(companies);
+//
+//        return ResponseEntity.status(HttpStatus.FOUND).body(companies);
+
     }
 
+
     @GetMapping("/{id}")
-    public ResponseEntity<Company> getCompany(@PathVariable Long id) {
-        Optional<Company> company = companyRepository.findById(id);
-        return company.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(company.get()));
+    public ResponseEntity<CompanyDTO> getCompany(@PathVariable Long id) {
+        try {
+            Company company = Optional.ofNullable(companyRepository.findById(id).orElseThrow(CompanyNotFoundException::new)).get();
+            CompanyDTO companyDTO = mapper.map(company, CompanyDTO.class);
+            return ResponseEntity.ok(companyDTO);
+        } catch (CompanyNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
 
     }
 
     @PostMapping
-    public ResponseEntity<Company> postCompany(@Valid @RequestBody Company company) {
+    public ResponseEntity<Company> postCompany(@Valid @RequestBody CompanyDTO newCompany) {
+        Company company = mapper.map(newCompany, Company.class);
         return ResponseEntity.status(HttpStatus.OK).body(companyRepository.save(company));
     }
 
     @PutMapping
-    public ResponseEntity<Company> alterCompany(@PathVariable Long id, @Valid @RequestBody Company newCompany) {
+    public ResponseEntity<Company> alterCompany(@PathVariable Long id, @Valid @RequestBody CompanyDTO newCompanyDTO) {
         try {
+            Company newCompany = mapper.map(newCompanyDTO, Company.class);
             Company company = Optional.ofNullable(companyRepository.findById(id).orElseThrow(CompanyNotFoundException::new)).get();
             company.setCompanyName(newCompany.getCompanyName());
             company.setUsers(newCompany.getUsers());
@@ -93,9 +112,21 @@ public class CompanyEndpoint {
         this.companyRepository = companyRepository;
     }
 
+
+    private CompanyDTO converterToDTO(Company company){
+        return mapper.map(company, CompanyDTO.class);
+    }
+
+    private ModelMapper configureMapper(){
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+        return  mapper;
+    }
+
     private Company applyPatchToCustomer(JsonPatch patch, Company targetCustomer) throws JsonPatchException, JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode patched = patch.apply(objectMapper.convertValue(targetCustomer, JsonNode.class));
         return objectMapper.treeToValue(patched, Company.class);
     }
+
 }

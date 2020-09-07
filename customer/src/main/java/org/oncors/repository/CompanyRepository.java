@@ -1,6 +1,6 @@
 package org.oncors.repository;
 
-import org.oncors.model.Company;
+import org.oncors.model.entity.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

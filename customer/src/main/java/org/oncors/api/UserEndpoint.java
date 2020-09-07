@@ -6,9 +6,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.Conditions;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.oncors.exception.CompanyNotFoundException;
 import org.oncors.exception.UserNotFoundException;
-import org.oncors.model.User;
+import org.oncors.model.DTO.CompanyDTO;
+import org.oncors.model.DTO.UserDTO;
+import org.oncors.model.entity.Company;
+import org.oncors.model.entity.User;
 import org.oncors.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,44 +25,55 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
 @EnableSwagger2
 @RequestMapping("/users")
 public class UserEndpoint {
-
     private final UserRepository userRepository;
+    private final ModelMapper mapper = configureMapper();
 
     @GetMapping
-    public ResponseEntity<List<User>> getUsers() {
-        List<User> users = userRepository.findAll();
-        if (users.isEmpty())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(users);
+    public ResponseEntity<List<UserDTO>> getUsers() {
 
-        return ResponseEntity.status(HttpStatus.FOUND).body(users);
+        List<User> companies = userRepository.findAll();
+        return ResponseEntity.ok().body( companies.stream().map(this::converterToDTO).collect(Collectors.toList()));
+
+
+//        List<UserDTO> users = mapper.map(userRepository.findAll(), new TypeToken<List<UserDTO>>() {}.getType());
+//        if (users.isEmpty())
+//            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(users);
+//
+//        return ResponseEntity.status(HttpStatus.FOUND).body(users);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getCompany(@PathVariable Long id) {
-        Optional<User> user = userRepository.findById(id);
-        return user.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).body(user.get()));
-
+    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
+        try {
+            User user = Optional.ofNullable(userRepository.findById(id).orElseThrow(UserNotFoundException::new)).get();
+            UserDTO userDTO = mapper.map(user, UserDTO.class);
+            return ResponseEntity.ok(userDTO);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @PostMapping
-    public ResponseEntity<User> postCompany(@Valid @RequestBody User user) {
+    public ResponseEntity<User> posUser(@Valid @RequestBody UserDTO newUser) {
+        User user = mapper.map(newUser, User.class);
         return ResponseEntity.status(HttpStatus.OK).body(userRepository.save(user));
     }
 
     @PutMapping
-    public ResponseEntity<User> alterCompany(@PathVariable Long id, @Valid @RequestBody User newUser) {
+    public ResponseEntity<User> alterUser(@PathVariable Long id, @Valid @RequestBody User alterUser) {
         try {
             User user = Optional.ofNullable(userRepository.findById(id).orElseThrow(UserNotFoundException::new)).get();
-            user.setAddress(newUser.getAddress());
-            user.setCompany(newUser.getCompany());
-            user.setContact(newUser.getContact());
-            user.setPersonalData(newUser.getPersonalData());
+            user.setAddress(alterUser.getAddress());
+            user.setCompany(alterUser.getCompany());
+            user.setContact(alterUser.getContact());
+            user.setPersonalData(alterUser.getPersonalData());
             return ResponseEntity.ok(user);
 
         } catch (CompanyNotFoundException e) {
@@ -66,7 +83,7 @@ public class UserEndpoint {
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")
-    public ResponseEntity<User> updateCompany(@PathVariable long id, @RequestBody JsonPatch patch) {
+    public ResponseEntity<User> updateUser(@PathVariable long id, @RequestBody JsonPatch patch) {
         try {
             User user = Optional.ofNullable(userRepository.findById(id).orElseThrow(UserNotFoundException::new)).get();
             user = applyPatchToCustomer(patch, user);
@@ -81,7 +98,7 @@ public class UserEndpoint {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<User> deleteCompany(@PathVariable long id) {
+    public ResponseEntity<User> deleteUser(@PathVariable long id) {
         try {
             User user = Optional.ofNullable(userRepository.findById(id).orElseThrow(UserNotFoundException::new)).get();
             userRepository.delete(user);
@@ -102,4 +119,15 @@ public class UserEndpoint {
         JsonNode patched = patch.apply(objectMapper.convertValue(targetUser, JsonNode.class));
         return objectMapper.treeToValue(patched, User.class);
     }
+
+    private ModelMapper configureMapper(){
+        ModelMapper mapper = new ModelMapper();
+       // mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+        return  mapper;
+    }
+
+    private UserDTO converterToDTO(User user){
+        return mapper.map(user, UserDTO.class);
+    }
+
 }

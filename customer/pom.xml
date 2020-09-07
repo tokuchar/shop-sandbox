@@ -16,8 +16,10 @@
         <springboot.maven.version>1.2.5.RELEASE</springboot.maven.version>
         <flyway.version>5.2.1</flyway.version>
         <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
-        <hibernate-core.version> 5.2.1.Final</hibernate-core.version>
+        <hibernate-core.version>5.2.1.Final</hibernate-core.version>
         <hibernate-validator-cdi.version>6.1.5.Final</hibernate-validator-cdi.version>
+        <model-mapper.version>1.1.0</model-mapper.version>
+        <json_tool.version>1.12</json_tool.version>
     </properties>
 
     <artifactId>customer</artifactId>
@@ -28,9 +30,13 @@
         <dependency>
             <groupId>com.github.java-json-tools</groupId>
             <artifactId>json-patch</artifactId>
-            <version>1.12</version>
+            <version>${json_tool.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>${model-mapper.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator-cdi</artifactId>

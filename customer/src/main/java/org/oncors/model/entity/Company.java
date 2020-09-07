@@ -1,4 +1,4 @@
-package org.oncors.model;
+package org.oncors.model.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +23,7 @@ public class Company {
     @Column(name = "name")
     private String companyName;
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
+    //@JsonIgnore
     private Set<User> users;
 }
