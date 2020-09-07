@@ -16,8 +16,3 @@ eureka:
     instance-id: ${spring.application.name}:${random.int}
 zuul:
   sensitive-headers: Cookie
-opentracing:
-  jaeger:
-    udp-sender:
-      host: localhost
-      port: 6831
