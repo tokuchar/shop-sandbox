@@ -22,7 +22,7 @@
         <module>shop-service-discovery</module>
         <module>shop-api-gateway</module>
         <module>shop-auth-service</module>
-        <module>auth-utils</module>
+        <module>utils</module>
     </modules>
 
     <properties>

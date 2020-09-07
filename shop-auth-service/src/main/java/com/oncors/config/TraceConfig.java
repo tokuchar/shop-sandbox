@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 @EnableAutoConfiguration
 @Configuration
-public class JeagerConfig {
+public class TraceConfig {
     @Bean
     public io.opentracing.Tracer tracer(@Value("${spring.application.name}") String microserviceName) {
         io.jaegertracing.Configuration.SamplerConfiguration samplerConfig = new io.jaegertracing.Configuration.SamplerConfiguration()

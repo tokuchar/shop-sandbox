@@ -1,17 +1,16 @@
 package org.oncors.config;
 
-//import io.jaegertracing.internal.samplers.ConstSampler;
 import io.jaegertracing.internal.samplers.ConstSampler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.*;
+import org.springframework.web.client.RestTemplate;
 
 @EnableAutoConfiguration
 @Configuration
-public class JeagerConfig {
+public class TraceConfig {
     @Bean
     public io.opentracing.Tracer tracer(@Value("${spring.application.name}") String microserviceName) {
         io.jaegertracing.Configuration.SamplerConfiguration samplerConfig = new io.jaegertracing.Configuration.SamplerConfiguration()
