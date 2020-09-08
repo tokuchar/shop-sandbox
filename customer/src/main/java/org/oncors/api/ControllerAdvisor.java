@@ -1,8 +1,8 @@
 package org.oncors.api;
 
 import org.oncors.exception.CompanyNotFoundException;
-import org.oncors.exception.UserNotFoundException;
 import org.oncors.exception.DataNotFoundException;
+import org.oncors.exception.UserNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

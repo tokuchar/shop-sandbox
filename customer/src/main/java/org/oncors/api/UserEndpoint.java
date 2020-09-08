@@ -8,13 +8,10 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.oncors.exception.CompanyNotFoundException;
 import org.oncors.exception.UserNotFoundException;
-import org.oncors.model.DTO.CompanyDTO;
-import org.oncors.model.DTO.UserDTO;
-import org.oncors.model.entity.Company;
-import org.oncors.model.entity.User;
+import org.oncors.dto.UserDTO;
+import org.oncors.model.User;
 import org.oncors.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,15 +35,11 @@ public class UserEndpoint {
     @GetMapping
     public ResponseEntity<List<UserDTO>> getUsers() {
 
-        List<User> companies = userRepository.findAll();
-        return ResponseEntity.ok().body( companies.stream().map(this::converterToDTO).collect(Collectors.toList()));
+        List<User> users = userRepository.findAll();
+        if (users.isEmpty())
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.ok().body(users.stream().map(value -> mapper.map(value, UserDTO.class)).collect(Collectors.toList()));
 
-
-//        List<UserDTO> users = mapper.map(userRepository.findAll(), new TypeToken<List<UserDTO>>() {}.getType());
-//        if (users.isEmpty())
-//            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(users);
-//
-//        return ResponseEntity.status(HttpStatus.FOUND).body(users);
     }
 
     @GetMapping("/{id}")
@@ -120,14 +113,9 @@ public class UserEndpoint {
         return objectMapper.treeToValue(patched, User.class);
     }
 
-    private ModelMapper configureMapper(){
+    private ModelMapper configureMapper() {
         ModelMapper mapper = new ModelMapper();
-       // mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
-        return  mapper;
+        mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+        return mapper;
     }
-
-    private UserDTO converterToDTO(User user){
-        return mapper.map(user, UserDTO.class);
-    }
-
 }

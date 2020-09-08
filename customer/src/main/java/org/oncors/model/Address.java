@@ -1,4 +1,4 @@
-package org.oncors.model.entity;
+package org.oncors.model;
 
 import lombok.Getter;
 import lombok.Setter;

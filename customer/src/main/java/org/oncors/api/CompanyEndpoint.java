@@ -8,10 +8,10 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.oncors.exception.CompanyNotFoundException;
-import org.oncors.model.DTO.CompanyDTO;
-import org.oncors.model.entity.Company;
+import org.oncors.dto.CompanyDTO;
+import org.oncors.dto.CompanyWithEmployeesDTO;
+import org.oncors.model.Company;
 import org.oncors.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,24 +33,39 @@ public class CompanyEndpoint {
     private final ModelMapper mapper = configureMapper();
 
     @GetMapping
-    public ResponseEntity<List<CompanyDTO>> getCompanies() {
-
+    public ResponseEntity<List<CompanyWithEmployeesDTO>> getCompaniesInfoWithEmployees() {
         List<Company> companies = companyRepository.findAll();
-        return ResponseEntity.ok().body( companies.stream().map(this::converterToDTO).collect(Collectors.toList()));
+        if (companies.isEmpty())
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.ok().body(companies.stream().map(value -> mapper.map(value, CompanyWithEmployeesDTO.class)).collect(Collectors.toList()));
+    }
 
-//        if (companies.isEmpty())
-//            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(companies);
-//
-//        return ResponseEntity.status(HttpStatus.FOUND).body(companies);
-
+    @GetMapping("WithoutEmployees")
+    public ResponseEntity<List<CompanyDTO>> getCompaniesInfo() {
+        List<Company> companies = companyRepository.findAll();
+        if (companies.isEmpty())
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.ok().body(companies.stream().map(value -> mapper.map(value, CompanyDTO.class)).collect(Collectors.toList()));
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<CompanyDTO> getCompany(@PathVariable Long id) {
+    public ResponseEntity<CompanyDTO> getCompanyInfo(@PathVariable Long id) {
         try {
             Company company = Optional.ofNullable(companyRepository.findById(id).orElseThrow(CompanyNotFoundException::new)).get();
             CompanyDTO companyDTO = mapper.map(company, CompanyDTO.class);
+            return ResponseEntity.ok(companyDTO);
+        } catch (CompanyNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+    }
+
+    @GetMapping("WithEmployees/{id}")
+    public ResponseEntity<CompanyWithEmployeesDTO> getCompanyWithEmployees(@PathVariable Long id) {
+        try {
+            Company company = Optional.ofNullable(companyRepository.findById(id).orElseThrow(CompanyNotFoundException::new)).get();
+            CompanyWithEmployeesDTO companyDTO = mapper.map(company, CompanyWithEmployeesDTO.class);
             return ResponseEntity.ok(companyDTO);
         } catch (CompanyNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -112,15 +126,10 @@ public class CompanyEndpoint {
         this.companyRepository = companyRepository;
     }
 
-
-    private CompanyDTO converterToDTO(Company company){
-        return mapper.map(company, CompanyDTO.class);
-    }
-
-    private ModelMapper configureMapper(){
+    private ModelMapper configureMapper() {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
-        return  mapper;
+        return mapper;
     }
 
     private Company applyPatchToCustomer(JsonPatch patch, Company targetCustomer) throws JsonPatchException, JsonProcessingException {
