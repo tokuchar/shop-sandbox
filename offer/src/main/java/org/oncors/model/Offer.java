@@ -12,5 +12,5 @@ public class Offer {
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
-    private Price price;
+    private int price;
 }
