@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: offer
+  datasource:
+    url: jdbc:mysql://localhost:3308/OFFER_DB
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+eureka:
+  client:
+    fetchRegistry: true
+    registryWithEureka: true
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    preferIpAddress: true
+    instance-id: ${spring.application.name}:${random.int}
