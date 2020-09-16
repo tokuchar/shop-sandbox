@@ -8,9 +8,9 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
+import org.oncors.dto.UserDTO;
 import org.oncors.exception.CompanyNotFoundException;
 import org.oncors.exception.UserNotFoundException;
-import org.oncors.dto.UserDTO;
 import org.oncors.model.User;
 import org.oncors.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,13 +60,14 @@ public class UserEndpoint {
     }
 
     @PutMapping
-    public ResponseEntity<User> alterUser(@PathVariable Long id, @Valid @RequestBody User alterUser) {
+    public ResponseEntity<User> alterUser(@PathVariable Long id, @Valid @RequestBody UserDTO alterUser) {
         try {
-            User user = Optional.ofNullable(userRepository.findById(id).orElseThrow(UserNotFoundException::new)).get();
-            user.setAddress(alterUser.getAddress());
-            user.setCompany(alterUser.getCompany());
-            user.setContact(alterUser.getContact());
-            user.setPersonalData(alterUser.getPersonalData());
+            User user = mapper.map(alterUser, User.class);
+            User newUser = Optional.ofNullable(userRepository.findById(id).orElseThrow(UserNotFoundException::new)).get();
+            user.setAddress(newUser.getAddress());
+            user.setCompany(newUser.getCompany());
+            user.setContact(newUser.getContact());
+            user.setPersonalData(newUser.getPersonalData());
             return ResponseEntity.ok(user);
 
         } catch (CompanyNotFoundException e) {
