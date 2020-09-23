@@ -41,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/authenticate").permitAll()
                 .antMatchers("/validate_token").permitAll()
                 .antMatchers(AUTH_WHITELIST).permitAll()
+                .antMatchers("/hello").permitAll()
                 .antMatchers("/user").hasAnyAuthority(ShopAuthority.ADMIN.name(), ShopAuthority.REGISTRATION_MICROSERVICE.name())
                 .anyRequest().authenticated()
                 .and().sessionManagement()

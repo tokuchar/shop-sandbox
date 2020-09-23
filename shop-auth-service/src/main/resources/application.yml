@@ -27,3 +27,8 @@ eureka:
 token:
   expirationTime: 36000000
   secretKey: secret1234
+opentracing:
+  jaeger:
+    enabled: true
+    http-sender:
+      url: http://${JAEGER_HOST}:14268/api/traces

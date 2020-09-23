@@ -19,6 +19,9 @@
         <lombok.version>1.18.12</lombok.version>
         <javax.version>3.0-b71</javax.version>
         <swagger.version>2.9.2</swagger.version>
+        <opentracing-api.version>0.32.0</opentracing-api.version>
+        <jaeger-client.version>0.34.0</jaeger-client.version>
+        <trace-utils.version>1.0-SNAPSHOT</trace-utils.version>
     </properties>
 
     <dependencies>
@@ -91,7 +94,23 @@
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>io.jaegertracing</groupId>
+            <artifactId>jaeger-client</artifactId>
+            <version>${jaeger-client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.opentracing</groupId>
+            <artifactId>opentracing-api</artifactId>
+            <version>${opentracing-api.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.oncors</groupId>
+            <artifactId>trace-utils</artifactId>
+            <version>${trace-utils.version}</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

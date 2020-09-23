@@ -17,6 +17,9 @@
         <flyway.version>5.2.1</flyway.version>
         <jjwt.version>0.9.1</jjwt.version>
         <auth.util.version>1.0-SNAPSHOT</auth.util.version>
+        <opentracing-api.version>0.32.0</opentracing-api.version>
+        <jaeger-client.version>0.34.0</jaeger-client.version>
+        <trace-utils.version>1.0-SNAPSHOT</trace-utils.version>
     </properties>
 
     <artifactId>customer</artifactId>
@@ -93,6 +96,23 @@
             <groupId>org.oncors</groupId>
             <artifactId>auth-utils</artifactId>
             <version>${auth.util.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jaegertracing</groupId>
+            <artifactId>jaeger-client</artifactId>
+            <version>${jaeger-client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.opentracing</groupId>
+            <artifactId>opentracing-api</artifactId>
+            <version>${opentracing-api.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.oncors</groupId>
+            <artifactId>trace-utils</artifactId>
+            <version>${trace-utils.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
