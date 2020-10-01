@@ -6,12 +6,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 import lombok.extern.slf4j.Slf4j;
+import org.oncors.aop.Trace;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.oncors.dto.CompanyDTO;
 import org.oncors.dto.CompanyWithEmployeesDTO;
 import org.oncors.exception.CompanyNotFoundException;
 import org.oncors.model.Company;
+import org.springframework.http.HttpHeaders;
 import org.oncors.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,8 +34,9 @@ public class CompanyEndpoint {
     private final CompanyRepository companyRepository;
     private final ModelMapper mapper = configureMapper();
 
+    @Trace
     @GetMapping
-    public ResponseEntity<List<CompanyWithEmployeesDTO>> getCompaniesInfoWithEmployees() {
+    public ResponseEntity<List<CompanyWithEmployeesDTO>> getCompaniesInfoWithEmployees(@RequestHeader HttpHeaders httpHeaders) {
         List<Company> companies = companyRepository.findAll();
         if (companies.isEmpty())
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -41,7 +44,7 @@ public class CompanyEndpoint {
     }
 
     @GetMapping("WithoutEmployees")
-    public ResponseEntity<List<CompanyDTO>> getCompaniesInfo() {
+    public ResponseEntity<List<CompanyDTO>> getCompaniesInfo(@RequestHeader HttpHeaders httpHeaders) {
         List<Company> companies = companyRepository.findAll();
         if (companies.isEmpty())
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -49,8 +52,9 @@ public class CompanyEndpoint {
     }
 
 
+    @Trace
     @GetMapping("/{id}")
-    public ResponseEntity<CompanyDTO> getCompanyInfo(@PathVariable Long id) {
+    public ResponseEntity<CompanyDTO> getCompanyInfo(@PathVariable Long id, @RequestHeader HttpHeaders httpHeaders) {
         try {
             Company company = Optional.ofNullable(companyRepository.findById(id).orElseThrow(CompanyNotFoundException::new)).get();
             CompanyDTO companyDTO = mapper.map(company, CompanyDTO.class);
@@ -62,7 +66,7 @@ public class CompanyEndpoint {
     }
 
     @GetMapping("WithEmployees/{id}")
-    public ResponseEntity<CompanyWithEmployeesDTO> getCompanyWithEmployees(@PathVariable Long id) {
+    public ResponseEntity<CompanyWithEmployeesDTO> getCompanyWithEmployees(@PathVariable Long id, @RequestHeader HttpHeaders httpHeaders) {
         try {
             Company company = Optional.ofNullable(companyRepository.findById(id).orElseThrow(CompanyNotFoundException::new)).get();
             CompanyWithEmployeesDTO companyDTO = mapper.map(company, CompanyWithEmployeesDTO.class);
@@ -73,14 +77,16 @@ public class CompanyEndpoint {
 
     }
 
+    @Trace
     @PostMapping
-    public ResponseEntity<Company> postCompany(@Valid @RequestBody CompanyDTO newCompany) {
+    public ResponseEntity<Company> postCompany(@Valid @RequestBody CompanyDTO newCompany, @RequestHeader HttpHeaders httpHeaders) {
         Company company = mapper.map(newCompany, Company.class);
         return ResponseEntity.status(HttpStatus.OK).body(companyRepository.save(company));
     }
 
+    @Trace
     @PutMapping
-    public ResponseEntity<Company> alterCompany(@PathVariable Long id, @Valid @RequestBody CompanyDTO newCompanyDTO) {
+    public ResponseEntity<Company> alterCompany(@PathVariable Long id, @Valid @RequestBody CompanyDTO newCompanyDTO, @RequestHeader HttpHeaders httpHeaders) {
         try {
             Company newCompany = mapper.map(newCompanyDTO, Company.class);
             Company company = Optional.ofNullable(companyRepository.findById(id).orElseThrow(CompanyNotFoundException::new)).get();
@@ -95,7 +101,7 @@ public class CompanyEndpoint {
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")
-    public ResponseEntity<Company> updateCompany(@PathVariable long id, @RequestBody JsonPatch patch) {
+    public ResponseEntity<Company> updateCompany(@PathVariable long id, @RequestBody JsonPatch patch, @RequestHeader HttpHeaders httpHeaders) {
         try {
             Company company = Optional.ofNullable(companyRepository.findById(id).orElseThrow(CompanyNotFoundException::new)).get();
             company = applyPatchToCustomer(patch, company);
@@ -110,7 +116,7 @@ public class CompanyEndpoint {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Company> deleteCompany(@PathVariable long id) {
+    public ResponseEntity<Company> deleteCompany(@PathVariable long id, @RequestHeader HttpHeaders httpHeaders) {
         try {
             Company company = Optional.ofNullable(companyRepository.findById(id).orElseThrow(CompanyNotFoundException::new)).get();
             companyRepository.delete(company);

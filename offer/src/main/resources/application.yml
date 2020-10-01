@@ -1,15 +1,13 @@
 spring:
   application:
-    name: customer
+    name: offer
   datasource:
-    url: jdbc:mysql://localhost:3306/CLIENT_DB
-#    url: jdbc:mysql://host.docker.internal:3306/CLIENT_DB
+    url: jdbc:mysql://localhost:3308/OFFER_DB
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
 eureka:
   client:
-    enabled: true
     fetchRegistry: true
     registryWithEureka: true
     serviceUrl:
@@ -17,12 +15,3 @@ eureka:
   instance:
     preferIpAddress: true
     instance-id: ${spring.application.name}:${random.int}
-auth:
-  secretKey: secret1234
-  service:
-    url: http://localhost:9092/api-gateway/auth-service
-opentracing:
-  jaeger:
-    enabled: true
-    http-sender:
-      url: http://${JAEGER_HOST}:14268/api/traces

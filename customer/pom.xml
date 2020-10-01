@@ -15,6 +15,11 @@
         <spring-plugin.version>1.2.0.RELEASE</spring-plugin.version>
         <springboot.maven.version>1.2.5.RELEASE</springboot.maven.version>
         <flyway.version>5.2.1</flyway.version>
+        <jjwt.version>0.9.1</jjwt.version>
+        <auth.util.version>1.0-SNAPSHOT</auth.util.version>
+        <opentracing-api.version>0.32.0</opentracing-api.version>
+        <jaeger-client.version>0.34.0</jaeger-client.version>
+        <trace-utils.version>1.0-SNAPSHOT</trace-utils.version>
         <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
         <hibernate-core.version>5.2.1.Final</hibernate-core.version>
         <hibernate-validator-cdi.version>6.1.5.Final</hibernate-validator-cdi.version>
@@ -128,6 +133,42 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.oncors</groupId>
+            <artifactId>auth-utils</artifactId>
+            <version>${auth.util.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jaegertracing</groupId>
+            <artifactId>jaeger-client</artifactId>
+            <version>${jaeger-client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.opentracing</groupId>
+            <artifactId>opentracing-api</artifactId>
+            <version>${opentracing-api.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.oncors</groupId>
+            <artifactId>trace-utils</artifactId>
+            <version>${trace-utils.version}</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
