@@ -61,19 +61,18 @@ public class UserEndpoint {
 
     @PutMapping
     public ResponseEntity<User> alterUser(@PathVariable Long id, @Valid @RequestBody UserDTO alterUser) {
-        try {
             User user = mapper.map(alterUser, User.class);
-            User newUser = Optional.ofNullable(userRepository.findById(id).orElseThrow(UserNotFoundException::new)).get();
-            user.setAddress(newUser.getAddress());
-            user.setCompany(newUser.getCompany());
-            user.setContact(newUser.getContact());
-            user.setPersonalData(newUser.getPersonalData());
+            Optional.ofNullable(userRepository.findById(id)
+                    .map(newUser -> {
+                        user.setAddress(newUser.getAddress());
+                        user.setCompany(newUser.getCompany());
+                        user.setContact(newUser.getContact());
+                        user.setPersonalData(newUser.getPersonalData());
+                        return ResponseEntity.ok(user);
+                    })
+                    .orElseThrow(UserNotFoundException::new));
+
             return ResponseEntity.ok(user);
-
-        } catch (CompanyNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")

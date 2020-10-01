@@ -8,9 +8,9 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
-import org.oncors.exception.CompanyNotFoundException;
 import org.oncors.dto.CompanyDTO;
 import org.oncors.dto.CompanyWithEmployeesDTO;
+import org.oncors.exception.CompanyNotFoundException;
 import org.oncors.model.Company;
 import org.oncors.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,7 +99,7 @@ public class CompanyEndpoint {
         try {
             Company company = Optional.ofNullable(companyRepository.findById(id).orElseThrow(CompanyNotFoundException::new)).get();
             company = applyPatchToCustomer(patch, company);
-            companyRepository.save(company);
+           // companyRepository.save(company);
 
             return ResponseEntity.ok(company);
         } catch (JsonPatchException | JsonProcessingException e) {
